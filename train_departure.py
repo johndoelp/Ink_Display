@@ -5,6 +5,7 @@ import time
 import json
 import requests
 import csv
+from secrets import api_key
 
 def train_call():
     upcoming_trains = []
