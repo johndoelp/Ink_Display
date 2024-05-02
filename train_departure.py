@@ -8,8 +8,7 @@ import csv
 
 def train_call():
     upcoming_trains = []
-    # MBTA API key
-    api_key = "0aea58a21bcc40e9b16679f428d7e99e"
+
 
     # Construct the API URL
     #url = "https://api-v3.mbta.com/predictions?filter[stop]={70064}&filter[direction_id]=0&sort=departure_time&include=stop,trip"
