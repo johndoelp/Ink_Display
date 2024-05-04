@@ -37,7 +37,6 @@ def forecast_parser():
     # create dictionary for weather forecast
     forecasted_weather_days = []
     weather_icon = None
-    current_weather_icon = None
     weather = get_weather()
 
     # map icons to weather_code
