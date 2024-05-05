@@ -1,23 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-import time
-import json
 import requests
-import csv
-from secrets import api_key
+from train_secrets import secrets
+from datetime import datetime
 
 def train_call():
     upcoming_trains = []
 
-
-    # Construct the API URL
-    #url = "https://api-v3.mbta.com/predictions?filter[stop]={70064}&filter[direction_id]=0&sort=departure_time&include=stop,trip"
-    url = "https://api-v3.mbta.com/predictions?filter%5Bstop%5D=70064"
+    # MBTA API URL
+    url = "https://api-v3.mbta.com/schedules?filter[stop]=70064"
 
     # Set up the headers with API key
     headers = {
-        "x-api-key": api_key
+        "x-api-key": secrets['train_api']
     }
 
     # Make the API request
@@ -27,15 +20,14 @@ def train_call():
         data = response.json()
         predictions = data.get("data", [])
 
-        # Extract and print the arrival times of the next two trains
+        # Extract and print the departure times of the next four trains
         for i, prediction in enumerate(predictions[:4]):
             departure_time = prediction["attributes"]["departure_time"]
-            t = departure_time.index("T")
-            upcoming_trains.append(departure_time[11:19])
+            if datetime.strptime(departure_time,"%Y-%m-%dT%H:%M:%SZ") > datetime.now("-04:00"):
+                upcoming_trains.append(departure_time[11:19])
         print(upcoming_trains)
         return upcoming_trains
 
     else:
         print(f"Failed to retrieve data. Status code: {response.status_code}")
-
 train_call()
