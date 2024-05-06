@@ -1,11 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
-import os
-import time
 import datetime
 import json
-from sys import exit
 
 import requests
 
@@ -36,7 +31,6 @@ def current_parser():
 
     # create dictionary for current conditions
     weather_icon = None
-    current_weather_icon = None
     current_weather = []
 
     # weather_icon name match
@@ -67,5 +61,5 @@ def current_parser():
     current_conditions.update({"current weather icon": weather_icon})
     current_weather.append(current_conditions)
 
-    #print(current_weather)
+    # print(current_weather)
     return current_weather

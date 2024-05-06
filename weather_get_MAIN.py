@@ -1,11 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
-import os
-import time
 import json
-from sys import exit
-
 import requests
 
 # query OpenMetero for current weather & forecast for Boston
@@ -30,8 +24,6 @@ def get_weather():
         return weather
     else:
         return weather
-
-
 
 def forecast_parser():
     # create dictionary for weather forecast

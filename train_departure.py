@@ -3,10 +3,8 @@ from train_secrets import secrets
 from datetime import datetime
 
 def train_call():
-    upcoming_trains = []
-
     # MBTA API URL
-    url = "https://api-v3.mbta.com/schedules?filter[stop]=70064"
+    url = "https://api-v3.mbta.com/predictions?filter[stop]=70064"
 
     # Set up the headers with API key
     headers = {
@@ -15,19 +13,20 @@ def train_call():
 
     # Make the API request
     response = requests.get(url, headers=headers)
-
+    upcoming_trains = []
     if response.status_code == 200:
-        data = response.json()
-        predictions = data.get("data", [])
-
-        # Extract and print the departure times of the next four trains
-        for i, prediction in enumerate(predictions[:4]):
-            departure_time = prediction["attributes"]["departure_time"]
-            if datetime.strptime(departure_time,"%Y-%m-%dT%H:%M:%SZ") > datetime.now("-04:00"):
-                upcoming_trains.append(departure_time[11:19])
-        print(upcoming_trains)
+        schedule = response.json()
+        # Extract and print the estimated departure times of the next two trains
+        if len(schedule) > 1:
+            for i in range(len(schedule)):
+                if schedule["data"][i]["attributes"]["departure_time"] != None:
+                    train_departure = datetime.strptime(schedule["data"][i]["attributes"]["departure_time"],"%Y-%m-%dT%H:%M:%S%z")
+                    upcoming_trains.append(train_departure)
+        else:
+            train_departure = datetime.strptime(schedule["data"][0]["attributes"]["departure_time"],"%Y-%m-%dT%H:%M:%S%z")
+            upcoming_trains.append(train_departure)
         return upcoming_trains
 
     else:
-        print(f"Failed to retrieve data. Status code: {response.status_code}")
-train_call()
+        print("Failed to retrieve train data.")
+print(train_call())
