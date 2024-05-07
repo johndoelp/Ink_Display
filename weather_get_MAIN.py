@@ -4,14 +4,12 @@ import requests
 
 # query OpenMetero for current weather & forecast for Boston
 def get_weather():
-
     weather_url = "https://api.open-meteo.com/v1/gfs?latitude=42.3876&longitude=-71.0995&current=temperature_2m,is_day,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York"
-
     weather = {}
     res = requests.get(weather_url)
     if res.status_code == 200:
         j = json.loads(res.text)
-
+        # grab daily forecast
         daily = j["daily"]
         weather["dates"] = daily["time"]
         weather["forecasted_weather_codes"] = daily["weather_code"]
@@ -24,7 +22,7 @@ def get_weather():
         return weather
     else:
         return weather
-
+# create dictionary of weather forecast & include forecast icon string from weather_code
 def forecast_parser():
     # create dictionary for weather forecast
     forecasted_weather_days = []
@@ -40,7 +38,7 @@ def forecast_parser():
         "storm": [95, 96, 99],
         "wind": []
     }
-
+    # run through the next four days of weather & append to empty dict
     for i in range(1,5):
         forecasted_weather_day = {
             "date": weather["dates"][i],
