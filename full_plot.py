@@ -10,7 +10,7 @@ import train_departure
 #import pillow to create PNG with plotted weather & trains
 from PIL import Image, ImageDraw, ImageFont
 ImageFont.load_default()
-# import glob
+import glob
 
 # font specification
 
@@ -44,6 +44,16 @@ def full_plot():
         draw.text((current_x, current_y+140), "Set: " + todaycurrent["sunset"].strftime('%I:%M %p'),(0))
         draw.text((current_x, current_y+160), "Precip: " +str(todaycurrent["precipitation_chance"]) + "%",(0))
     
+    # paste the current conditions icon
+        icons = {}
+        for icon in glob.glob(os.path.join("weather_resources/BIG/NEW/big-icon-*.png")):
+            icon_name = icon.split("big-icon-")[1].replace(".png", "")
+            icon_image = Image.open(icon)
+            icons[icon_name] = icon_image
+        if current_weather_icon is not None:
+            all_plot.paste(icons[current_weather_icon], (current_icon_x, current_icon_y))
+
+
     # plot the forecast for the next four days
     forecast_x = 5
     forecast_y = 200
@@ -56,6 +66,16 @@ def full_plot():
         draw.text((forecast_x, forecast_y+60), "Min: " + str(round(day['temp_min'])) + "°F",(0))
         draw.text((forecast_x, forecast_y+75), "Precip: " + str(day['precipitation_chance']) + "%",(0))
         forecast_x += 100
+
+    # paste the forecast icon
+        icons = {}
+        for icon in glob.glob(os.path.join("weather_resources/BIG/NEW/big-icon-*.png")):
+            icon_name = icon.split("big-icon-")[1].replace(".png", "")
+            icon_image = Image.open(icon)
+            icons[icon_name] = icon_image.resize((40, 45), resample=Image.LANCZOS)
+        if forecast_icon is not None:
+            all_plot.paste(icons[forecast_icon], (forecast_icon_x, forecast_icon_y))
+        forecast_icon_x += 100
     
     # plot the trains
     train_x = 10
@@ -68,3 +88,5 @@ def full_plot():
 
     # save all_plot as a png, as DrawingPanel doesn't seem to take all_plot as a returned image object
     all_plot.save(os.path.join(PATH, "all_plot.png"))
+
+full_plot()

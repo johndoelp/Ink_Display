@@ -13,7 +13,7 @@ def train_call():
     if response.status_code == 200:
         schedule = response.json()
         # Extract and print the estimated departure times of the next two trains
-        if len(schedule) == 1:
+        if len(schedule) > 1:
             for i in range(len(schedule)):
                 if schedule["data"][i]["attributes"]["departure_time"] != None:
                     train_departure = datetime.strptime(schedule["data"][i]["attributes"]["departure_time"],"%Y-%m-%dT%H:%M:%S%z")
